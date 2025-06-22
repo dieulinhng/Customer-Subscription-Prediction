@@ -129,12 +129,12 @@ Train and evaluate two classifiers: **Logistic Regression** and **RandomForestCl
 5. **F1-score**
 
 ### Logistic Regression
-![image](lr_auc.png)
-![image](lr_score.png)
+![image](./Image/lr_auc.png)
+![image](./Image/lr_score.png)
 
 ### RandomForestClassifier
-![image](rf_auc.png)
-![image](rf_score.png)
+![image](./Image/rf_auc.png)
+![image](./Image/rf_score.png)
 
 | Metric             | Logistic Regression | Random Forest Classifier |
 |--------------------|---------------------|--------------------------|
