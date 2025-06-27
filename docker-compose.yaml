@@ -1,0 +1,16 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5671:5672
+      - 15671:15672
+  api:
+    build: ./api
+    ports:
+      - 8081:8080
+    depends_on:
+      - rabbitmq
+  consumer:
+    build: ./consumer
+    depends_on:
+      - rabbitmq
