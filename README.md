@@ -1,4 +1,4 @@
-# Customer Subscription Prediction
+# 🛍️ Customer Subscription Prediction
 
 - Content:
   - [Introduction](#introduction)  
@@ -13,9 +13,7 @@
     - [Population Stability Index (PSI)](#population-stability-index-psi)
     - [Cross Validation](#cross-validation)
 
-**Disclaimer:** This is a demo project. I will continue to update it until the final product brings the best possible results.
-
-![shopping_behavior_clf](https://github.com/user-attachments/assets/93696038-459f-4fe9-9565-a83268e284b7)
+![image](./Image/workflow.png)
 
 # Introduction
 
@@ -129,29 +127,31 @@ Train and evaluate two classifiers: **Logistic Regression** and **RandomForestCl
 5. **F1-score**
 
 ### Logistic Regression
-![image](./Image/lr_auc.png)
-![image](./Image/lr_score.png)
+![image](./Image/auc_lr.png)
+![image](./Image/rank_lr.png)
 
 ### RandomForestClassifier
-![image](./Image/rf_auc.png)
-![image](./Image/rf_score.png)
+![image](./Image/auc_rf.png)
+![image](./Image/rank_rf.png)
 
-| Metric             | Logistic Regression | Random Forest Classifier |
-|--------------------|---------------------|--------------------------|
-| ROC AUC            | 0.890               | **0.901**                |
-| Gini Coefficient   | 0.781               | **0.802**                |
-| Accuracy           | 0.85                | 0.85                     |
-| Precision          | 0.64                | 0.65                     |
-| Recall             | 0.99                | 0.96                     |
-| F1-score           | 0.78                | 0.77                     |
+| Metric               | Logistic Regression | Random Forest Classifier     |
+|----------------------|---------------------|------------------------------|
+| **ROC AUC**          | 0.893               | <mark>0.908</mark>           |
+| **Gini Coefficient** | 0.786               | <mark>0.816</mark>           |
+| **Accuracy**         | 0.84                | 0.83                         |
+| **Precision**        | 0.63                | 0.63                         |
+| **Recall**           | 1.00                | 0.91                         |
+| **F1-score**         | 0.77                | 0.75                         |
 
 ## Overfitting/Underfitting
-| Dataset | Score  |
-|---------|--------|
-| Train   | 0.838  |
-| Test    | 0.848  |
-for both models.
-Neither model exhibits overfitting or underfitting.
+| Model                    | AUC (train)  | AUC (test) |   Overfitting   |   Underfitting   |
+|--------------------------|--------------|------------|-----------------|------------------|
+| **Logistic Regression**  | 0.913        | 0.893      | Not overfitting | Not underfitting |
+| **Random Forest**        | 1.000        | 0.908      | Overfitting     | Not underfitting |
+
+Based on the AUC results:
+- Overfitting: The Logistic Regression model shows only a small difference of 0.02 between the AUC on the training set and the test set. This means the model is not overfitting and should work well when used in real situations. In contrast, the Random Forest model has a perfect AUC of 1.000 on the training set, but only 0.908 on the test set. Even though its test performance is still high, the large gap and the perfect score on the training set suggest that the model is overfitting.
+- Underfitting: Both models have high AUC scores on both the training and test sets, so neither model is underfitting.
 
 ## Population Stability Index (PSI)
 Interpreting PSI Values
@@ -159,26 +159,92 @@ Interpreting PSI Values
 - Moderate PSI (e.g., 0.1 to 0.25): Indicates a moderate shift; you may need to monitor the variable.
 - High PSI (e.g., > 0.25): Indicates a significant shift in the distribution, which might warrant further investigation or model recalibration.
 
-1. Logistic Regression
-- PSI score: 0.0336 - LOW
+1. Numerical Features
+PSI for Age: 0.0042 - LOW
+PSI for Purchase_Amount_(USD): 0.0110 - LOW
+PSI for Review_Rating: 0.0077 - LOW
+PSI for Previous_Purchases: 0.0064 - LOW
+2. Logistic Regression
+- PSI score: 0.0082 - LOW
 - AUC: 0.892
-- Gini Coefficient: 0.783
-2. Random Forest
-- PSI score: 2.9781 - HIGH
-- AUC: 0.897
-- Gini Coefficient: 0.794
+- Gini Coefficient: 0.784
+3. Random Forest
+- PSI score: 2.4896 - HIGH
+- AUC: 0.899
+- Gini Coefficient: 0.798
 
 ## Cross Validation
 Use **Stratified K-Fold** (5 splits) to compare two models:
-| Model                 | CV Mean   | Std      | Test Scores                                                                                                           |
-|-----------------------|-----------|----------|-----------------------------------------------------------------------------------------------------------------------|
-| LogisticRegression    | 0.883644  | 0.007064 | 0.8837430395219341, 0.8700937118022545, 0.8891446302831909, 0.8890423337254703, 0.8861950795355736                    |
-| RandomForest          | 0.895573  | 0.008571 | 0.8866885101181584, 0.8859245552084747, 0.9076603072306617, 0.8950266823521389, 0.9025625287709069                    |
+| Model             | CV Mean   | Std      | Test Scores                                                                                                      |
+|------------------|-----------|----------|------------------------------------------------------------------------------------------------------------------|
+| LogisticRegression | 0.894594  | 0.006228 | [0.8880534670008354, 0.9008746355685131, 0.9030399127069374, 0.8923502648377021, 0.8886493277196795]             |
+| RandomForest       | 0.899493  | 0.004454 | [0.8978483624026052, 0.8956148875590337, 0.9082229382981263, 0.8976639956539454, 0.8981138802118702]             |
 
 - Random Forest has a **slightly higher CV mean** than Logistic Regression.  
-- Both models show **consistent performance** across folds (Std Dev ≈ 0.007).
+- Both models show **consistent performance** across folds.
 
-> Although the Random Forest model achieves a higher ROC AUC and Gini coefficient than Logistic Regression and outperforms it on every fold, Logistic Regression demonstrates greater stability with a lower standard deviation and a low PSI score. Since our priority is deployment stability, I choose the **Logistic Regression model**.
+> Although the Random Forest model has slightly better performance than Logistic Regression, the high PSI value shows a risk of instability when used with new data or in real-world situations. Moreover, the Random Forest model is overfitting. On the other hand, Logistic Regression gives similar results but has a low PSI, which means it is more stable and reliable for deployment. Therefore, I choose the **Logistic Regression model**.
 
-# Note
-I will continue to update and refine the model to achieve even better performance.
+# Deploy & Run ML Prediction Service with RabbitMQ (Docker)
+
+## 1. Overview
+This setup includes:
+- An API (using FastAPI) that receives requests from clients
+- RabbitMQ as the message broker
+- A Consumer that reads messages from the queue, runs the ML model, and returns the result
+All parts are packaged and run with Docker/Docker Compose.
+
+## 2. Architecture
+![image](./Image/deploy_arc.png)
+
+## 3. Implementation
+**Step 1: Setup**
+- Pull the RabbitMQ image from DockerHub
+- Build the API (FastAPI) and the Consumer images
+- Start all services using Docker Compose
+
+*Notes:*
+- Make sure the model and preprocessing files are in the consumer folder before building the Docker image.
+- If you need to change the port or other configurations, edit `docker-compose.yml`.
+
+**Step 2: Send a Prediction Request (using curl)**
+Example:
+```
+curl -X POST "http://localhost:8081/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Age": 35,
+    "Gender": "Male",
+    "Category": "Clothing",
+    "Purchase_Amount_(USD)": 49,
+    "Size": "M",
+    "Season": "Spring",
+    "Review_Rating": 3.7,
+    "Shipping_Type": "Express",
+    "Promo_Code_Used": "Yes",
+    "Previous_Purchases": 5,
+    "Payment_Method": "Venmo",
+    "Frequency_of_Purchases": "Weekly",
+    "Region": "Midwest",
+    "Color_Group": "Warm"
+  }'
+  ```
+The request is sent to the API, and the API packages the data and sends the message to RabbitMQ.
+![image](./Image/deploy_arc.png)
+
+**Step 3: Check Prediction Results**
+- View the result in the consumer logs: 
+```
+docker compose logs consumer
+```
+- Example:
+```
+consumer-1  | 🚀 Consumer run.
+consumer-1  | ✅ Successfully connected to RabbitMQ!
+consumer-1  | Waiting for messages 🔍
+consumer-1  | Message received from queue: b'{"Age": 35, "Gender": "Female", "Category": "Clothing", "Purchase_Amount_(USD)": 49, "Size": "M", "Season": "Spring", "Review_Rating": 3.7, "Shipping_Type": "Express", "Promo_Code_Used": "Yes", "Previous_Purchases": 5, "Payment_Method": "Venmo", "Frequency_of_Purchases": "Weekly", "Region": "Midwest", "Color_Group": "Warm"}'
+consumer-1  | ✅ Prediction result: 0
+```
+
+## 4. References
+[RabbitMQ Demo](https://github.com/Full-Stack-Data-Science/demo-final-project-real-time/tree/main)
