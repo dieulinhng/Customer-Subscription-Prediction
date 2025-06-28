@@ -12,7 +12,8 @@
     - [Overfitting/Underfitting](#overfittingunderfitting)
     - [Population Stability Index (PSI)](#population-stability-index-psi)
     - [Cross Validation](#cross-validation)
-
+  - [Deploy & Run ML Prediction Service with RabbitMQ (Docker)](#deploy--run-ml-prediction-service-with-rabbitmq-docker)
+  
 ![image](./Image/workflow.png)
 
 # Introduction
@@ -232,7 +233,7 @@ curl -X POST "http://localhost:8081/predict" \
   }'
   ```
 The request is sent to the API, and the API packages the data and sends the message to RabbitMQ.
-![image](./Image/deploy_arc.png)
+![image](./Image/demo_rabbit.jpg)
 
 **Step 3: Check Prediction Results**
 - View the result in the consumer logs: 
