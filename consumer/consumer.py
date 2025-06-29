@@ -25,12 +25,10 @@ preproc = joblib.load('preproc.pkl')
 
 def callback(ch, method, properties, body):
     print("Message received from queue:", body)
-    # Giải mã dữ liệu JSON
     if isinstance(body, bytes):
         data = json.loads(body.decode('utf-8'))
     else:
         data = json.loads(body)
-    # Đảm bảo đúng thứ tự features
     feature_order = [
         'Age', 'Gender', 'Category', 'Purchase_Amount_(USD)', 'Size', 'Season', 'Review_Rating'
         , 'Shipping_Type', 'Promo_Code_Used', 'Previous_Purchases', 'Payment_Method'
@@ -39,8 +37,14 @@ def callback(ch, method, properties, body):
     input_dict = {field: data[field] for field in feature_order}
     input_df = pd.DataFrame([input_dict])
     X = preproc.transform(input_df)
-    pred = model.predict(X)
-    print("✅ Prediction result:", pred[0])
+    prob = model.predict_proba(X)[0][1]
+    label = model.predict(X)[0]
+    
+    label_map = {0: "Not Subcribed", 1: "Subcribed"}
+    label_str = label_map.get(label)
+    
+    print(f"✅ Probability: {prob:.2f}")
+    print(f"✅ Label: {label_str}")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq', port=5672))

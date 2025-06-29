@@ -13,7 +13,7 @@
     - [Population Stability Index (PSI)](#population-stability-index-psi)
     - [Cross Validation](#cross-validation)
   - [Deploy & Run ML Prediction Service with RabbitMQ (Docker)](#deploy--run-ml-prediction-service-with-rabbitmq-docker)
-  
+
 ![image](./Image/workflow.png)
 
 # Introduction
@@ -245,8 +245,9 @@ docker compose logs consumer
 consumer-1  | 🚀 Consumer run.
 consumer-1  | ✅ Successfully connected to RabbitMQ!
 consumer-1  | Waiting for messages 🔍
-consumer-1  | Message received from queue: b'{"Age": 35, "Gender": "Female", "Category": "Clothing", "Purchase_Amount_(USD)": 49, "Size": "M", "Season": "Spring", "Review_Rating": 3.7, "Shipping_Type": "Express", "Promo_Code_Used": "Yes", "Previous_Purchases": 5, "Payment_Method": "Venmo", "Frequency_of_Purchases": "Weekly", "Region": "Midwest", "Color_Group": "Warm"}'
-consumer-1  | ✅ Prediction result: 0
+consumer-1  | Message received from queue: b'{"Age": 35, "Gender": "Male", "Category": "Clothing", "Purchase_Amount_(USD)": 49, "Size": "M", "Season": "Spring", "Review_Rating": 3.7, "Shipping_Type": "Express", "Promo_Code_Used": "Yes", "Previous_Purchases": 5, "Payment_Method": "Venmo", "Frequency_of_Purchases": "Weekly", "Region": "Midwest", "Color_Group": "Warm"}'
+consumer-1  | ✅ Probability: 0.80
+consumer-1  | ✅ Label: Subcribed
 ```
 
 ## 4. References
