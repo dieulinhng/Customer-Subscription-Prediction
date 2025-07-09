@@ -14,7 +14,7 @@
     - [Cross Validation](#cross-validation)
   - [Deploy & Run ML Prediction Service with RabbitMQ (Docker)](#deploy--run-ml-prediction-service-with-rabbitmq-docker)
 
-![image](./Image/workflow.png)
+![image](./image/workflow.png)
 
 # Introduction
 
@@ -127,12 +127,12 @@ Build a Pipeline:
 
 ## Model
 ### Logistic Regression
-![image](./Image/auc_lr.png)
-![image](./Image/rank_lr.png)
+![image](./image/auc_lr.png)
+![image](./image/rank_lr.png)
 
 ### RandomForestClassifier
-![image](./Image/auc_rf.png)
-![image](./Image/rank_rf.png)
+![image](./image/auc_rf.png)
+![image](./image/rank_rf.png)
 
 | Metric               | Logistic Regression | Random Forest Classifier     |
 |----------------------|---------------------|------------------------------|
@@ -197,7 +197,7 @@ This setup includes:
 All parts are packaged and run with Docker/Docker Compose.
 
 ## 2. Architecture
-![image](./Image/deploy_arc.png)
+![image](./image/deploy_arc.png)
 
 ## 3. Implementation
 **Step 1: Setup**
@@ -233,7 +233,7 @@ curl -X POST "http://localhost:8081/predict" \
   }'
   ```
 The request is sent to the API, and the API packages the data and sends the message to RabbitMQ.
-![image](./Image/demo_rabbit.jpg)
+![image](./image/demo_rabbit.jpg)
 
 **Step 3: Check Prediction Results**
 - View the result in the consumer logs: 
