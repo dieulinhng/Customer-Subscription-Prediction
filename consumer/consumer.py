@@ -20,8 +20,8 @@ else:
     exit(1)
 
 # Load model và preprocessor
-model = joblib.load('model.pkl')
-preproc = joblib.load('preproc.pkl')
+model = joblib.load('models/model.pkl')
+preproc = joblib.load('models/preproc.pkl')
 
 def callback(ch, method, properties, body):
     print("Message received from queue:", body)
@@ -47,7 +47,6 @@ def callback(ch, method, properties, body):
     print(f"✅ Label: {label_str}")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq', port=5672))
 channel = connection.channel()
 channel.queue_declare(queue='predict_queue')
 

@@ -6,7 +6,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY consumer.py .
-COPY model.pkl .
-COPY preproc.pkl .
+COPY models/model.pkl models/
+COPY models/preproc.pkl models/
 
 CMD ["python", "-u", "consumer.py"]
