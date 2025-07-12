@@ -128,13 +128,11 @@ Build a Pipeline:
 ## Model
 ### Logistic Regression
 ![image](./image/auc_lr.png)
-![image](./image/rank_lr.png)
 
 ### RandomForestClassifier
 ![image](./image/auc_rf.png)
-![image](./image/rank_rf.png)
 
-| Metric               | Logistic Regression | Random Forest Classifier     |
+| Metric               | Logistic Regression | Random Forest                |
 |----------------------|---------------------|------------------------------|
 | **ROC AUC**          | 0.893               | <mark>0.908</mark>           |
 | **Gini Coefficient** | 0.786               | <mark>0.816</mark>           |
@@ -143,27 +141,33 @@ Build a Pipeline:
 | **Recall**           | 1.00                | 0.91                         |
 | **F1-score**         | 0.77                | 0.75                         |
 
-## Overfitting/Underfitting
-| Model                    | AUC (train)  | AUC (test) |   Overfitting   |   Underfitting   |
-|--------------------------|--------------|------------|-----------------|------------------|
-| **Logistic Regression**  | 0.913        | 0.893      | Not overfitting | Not underfitting |
-| **Random Forest**        | 1.000        | 0.908      | Overfitting     | Not underfitting |
+The AUC score reflects the model's classification ability, with values closer to 1 indicating better discrimination between classes. Both Logistic Regression and Random Forest have high ROC AUC scores, suggesting that both models perform very well in classifying the data, with Random Forest performing slightly better. With such high AUC values, both models can accurately predict the target classes. However, the AUC exceeding 0.9 for Random Forest may be an indication of *overfitting*.
 
-Based on the AUC results:
-- Overfitting: The Logistic Regression model shows only a small difference of 0.02 between the AUC on the training set and the test set. This means the model is not overfitting and should work well when used in real situations. In contrast, the Random Forest model has a perfect AUC of 1.000 on the training set, but only 0.908 on the test set. Even though its test performance is still high, the large gap and the perfect score on the training set suggest that the model is overfitting.
-- Underfitting: Both models have high AUC scores on both the training and test sets, so neither model is underfitting.
+## Overfitting/Underfitting
+![image](./image/logis_learning_curve.png)
+
+Looking at the chart of the Logistic Regression model, the training accuracy is initially very high but decreases as the sample size increases. In contrast, the validation accuracy starts low and then gradually increases as the sample size grows, indicating that the model is gradually making more accurate predictions. This result suggests that the model is **not overfitting**, as the validation accuracy is increasing and is nearly equal to the training accuracy. Besides, the model is **not underfitting**, as the validation accuracy continues to rise over time.
+
+![image](./image/rf_learning_curve.png)
+
+Looking at the chart of the Random Forest model, the training accuracy is very high, indicating that the model may be learning too much from the training data. Moreover, the validation accuracy is low and does not change much as the training set size increases. So, the model shows **signs of overfitting** because it performs well on the training set but does not generalize well to unseen data. As for underfitting, although the validation accuracy does not reach the same level as the training accuracy, it has gradually increased, suggesting that the model is learning better as the training data size increases. So, the model is **not underfitting**.
 
 ## Population Stability Index (PSI)
-Interpreting PSI Values 
-- Low PSI (e.g., < 0.1): Indicates little or no shift in the feature’s distribution between the datasets.
-- Moderate PSI (e.g., 0.1 to 0.25): Indicates a moderate shift; you may need to monitor the variable.
-- High PSI (e.g., > 0.25): Indicates a significant shift in the distribution, which might warrant further investigation or model recalibration.
+
+- The PSI value measures the difference between the predicted data distribution of the model and the actual data distribution. A low PSI indicates that the distribution between the predicted data and the actual data does not change much, suggesting that the model is stable. On the other hand, a high PSI indicates that the model lacks stability and could pose risks when deployed in real-world scenarios.
+
+- Interpreting PSI Values 
+  - Low PSI (e.g., < 0.1): Indicates little or no shift in the feature’s distribution between the datasets.
+  - Moderate PSI (e.g., 0.1 to 0.25): Indicates a moderate shift; you may need to monitor the variable.
+  - High PSI (e.g., > 0.25): Indicates a significant shift in the distribution, which might warrant further investigation or model recalibration.
 
 **1. Numerical Features**
 - PSI for Age: 0.0042 (LOW)
 - PSI for Purchase_Amount_(USD): 0.0110 (LOW)
 - PSI for Review_Rating: 0.0077 (LOW)
 - PSI for Previous_Purchases: 0.0064 (LOW)
+
+The PSI values for the numerical features are all very low, meaning the model predicts these values accurately, and there is no significant discrepancy compared to the actual data. Specifically, the model maintains good stability when deployed in real-world scenarios.
 
 **2. Logistic Regression**
 - PSI score: 0.0082 (LOW)
@@ -185,7 +189,7 @@ Use **Stratified K-Fold** (5 splits) to compare two models:
 - Random Forest has a **slightly higher CV mean** than Logistic Regression.  
 - Both models show **consistent performance** across folds.
 
-> Although the Random Forest model has slightly better performance than Logistic Regression, the high PSI value shows a risk of instability when used with new data or in real-world situations. Moreover, the Random Forest model is overfitting. On the other hand, Logistic Regression gives similar results but has a low PSI, which means it is more stable and reliable for deployment. Therefore, I choose the **Logistic Regression model**.
+**Conclusion**: Although the Random Forest model has slightly better performance than Logistic Regression, the high PSI value shows a risk of instability when used with new data or in real-world situations. Moreover, the Random Forest model is overfitting. On the other hand, Logistic Regression gives similar results but has a low PSI, which means it is more stable and reliable for deployment. Therefore, I choose the **Logistic Regression model**.
 
 # Deploy & Run ML Prediction Service with RabbitMQ (Docker)
 
